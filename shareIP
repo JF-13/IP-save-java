@@ -1,0 +1,60 @@
+/**
+ * Created by josef on 7/24/2016.
+ */
+
+import java.net.*;
+import java.io.*;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
+public class application {
+
+    public static void main(String[] args) {
+
+        Timer timer = new Timer();
+        ShowCurrentTimeTask task = new ShowCurrentTimeTask();
+        timer.scheduleAtFixedRate(task, 0, 3600000);
+
+    }
+
+    static class ShowCurrentTimeTask extends TimerTask {
+        @Override
+        public void run() {
+
+            String systemipaddress = "";
+            try {
+                URL url = new URL("http://bot.whatismyipaddress.com");
+                BufferedReader sc = new BufferedReader(new InputStreamReader(url.openStream()));
+                systemipaddress = sc.readLine().trim();
+                if (!(systemipaddress.length() > 0)) {
+                    try {
+                        InetAddress localhost = InetAddress.getLocalHost();
+                        System.out.println((localhost.getHostAddress()).trim());
+                        systemipaddress = (localhost.getHostAddress()).trim();
+                    } catch (Exception e1) {
+                        systemipaddress = "Cannot Execute Properly";
+                    }
+                }
+            } catch (Exception e2) {
+                systemipaddress = "Cannot Execute Properly";
+            }
+            String fileName = "C:\\Users\\osadmin\\Dropbox\\X.txt";
+
+            try {
+                PrintWriter outputStream = new PrintWriter(fileName);
+                outputStream.println("\nThe public IP Address for LaGrange Q is: " + systemipaddress + "\n");
+                outputStream.close();
+
+            } catch (FileNotFoundException e) {
+
+                e.printStackTrace();
+            }
+
+        }
+
+
+    }
+
+
+}
